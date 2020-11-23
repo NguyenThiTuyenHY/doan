@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "angularNCKH"
+    }
+  },
+  "defaultProject": "angularNCKH",
+  "cli": {
+    "analytics": "e6ca03ee-e310-455f-8dbe-7f9bf0359f20"
+  }
 }
