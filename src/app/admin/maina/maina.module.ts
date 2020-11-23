@@ -14,6 +14,7 @@ import { PositionComponent } from './position/position.component';
 import { BackgroupComponent } from './backgroup/backgroup.component';
 import { MissiontypeComponent } from './missiontype/missiontype.component';
 import { TopicComponent } from './topic/topic.component';
+import { ResearchactivitiesComponent } from './researchactivities/researchactivities.component';
 const mainaroutes:Routes = [
   {
     path: '',
@@ -48,7 +49,7 @@ const mainaroutes:Routes = [
 ]
 
 @NgModule({
-  declarations: [StatisticalComponent,MainaComponent, UnitComponent, FieldComponent, TypenewsComponent, NewsComponent, PositionComponent, BackgroupComponent, MissiontypeComponent, TopicComponent],
+  declarations: [StatisticalComponent,MainaComponent, UnitComponent, FieldComponent, TypenewsComponent, NewsComponent, PositionComponent, BackgroupComponent, MissiontypeComponent, TopicComponent, ResearchactivitiesComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(mainaroutes),
