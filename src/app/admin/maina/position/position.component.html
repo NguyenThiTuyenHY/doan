@@ -17,24 +17,27 @@
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Tên đơn vị</th>
-                            <th>Tỷ lệ</th>
+                            <th>Tên chức vụ</th>
+                            <th>Điều kiện</th>
+                            <th>Định mức</th>
                             <th>Ghi chú</th>
                             <th>Chức năng</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>Tên đơn vị</th>
-                            <th>Tỷ lệ</th>
+                            <th>Tên chức vụ</th>
+                            <th>Điều kiện</th>
+                            <th>Định mức</th>
                             <th>Ghi chú</th>
                             <th>Chức năng</th>
                         </tr>
                     </tfoot>
                     <tbody>
                         <tr *ngFor="let dv of item">
-                            <td>{{dv.tendonvi}}</td>
-                            <td>{{dv.tyle}}</td>
+                            <td>{{dv.tenchucvu}}</td>
+                            <td>{{dv.dieukien}}</td>
+                            <td>{{dv.dinhmuc}}</td>
                             <td>{{dv.ghichu}}</td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="edit(dv.madonvi)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
@@ -53,22 +56,26 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thông tin đơn vị</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thông tin chức vụ</h5>
                 <button type="button" id="closeModel" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Tên đơn vị</label>
-                    <input type="text" value="{{donvi}}" #dv class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Tên chức vụ</label>
+                    <input type="text" value="{{tenchucvu}}" #dv class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Tỷ lệ</label>
-                    <input type="text" value="{{tyle}}" #tl class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Điều kiện</label>
+                    <input type="text" value="{{dieukien}}" #tl class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Ghi chú</label>
+                    <label for="exampleInputEmail1">Định mức</label>
+                    <input type="text" value="{{dinhmuc}}" #gc class="form-control" id="exampleInputEmail1">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">ghi chú</label>
                     <input type="text" value="{{ghichu}}" #gc class="form-control" id="exampleInputEmail1">
                 </div>
             </div>

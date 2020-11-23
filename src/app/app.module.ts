@@ -8,7 +8,6 @@ import { ErrorComponent } from './admin/commona/error/error.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { PositionComponent } from './ámin/maina/position/position.component';
 const appRouter : Routes=[
   {
     path: '',
@@ -26,8 +25,7 @@ const appRouter : Routes=[
 @NgModule({
   declarations: [
     AppComponent,
-    ErrorComponent,
-    PositionComponent
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

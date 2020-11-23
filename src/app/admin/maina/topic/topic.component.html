@@ -127,10 +127,46 @@
                     <label for="exampleInputEmail1">Ghi chú</label>
                     <ckeditor #myEditor [(ngModel)]="ckeditorContent" [config]="{uiColor: '#a4a4a4'}" debounce="500"></ckeditor>
                 </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Lĩnh vực</label>
+                    <select #lv>
+                        <option></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Loại nhiệm vụ</label>
+                    <select #lnv>
+                        <option></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">hoạt động nghiên cứu khoa học</label>
+                    <select #hdnckh>
+                        <option></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Thời gian bắt đầu</label>
+                    <input type="datetime" value="{{thoigianbd}}" #tgbd class="form-control" id="exampleInputEmail1">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Thời gian kết thúc</label>
+                    <input type="datetime" value="{{thoigiankt}}" #tgkt class="form-control" id="exampleInputEmail1">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Cấp bảo vệ</label>
+                    <select #cbv>
+                        <option></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Minh chứng</label>
+                    <input type="text" value="{{minhchung}}" #cm class="form-control" id="exampleInputEmail1">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" (click)="exec(dv.value,tl.value,gc.value)">Lưu</button>
+                <button type="button" class="btn btn-primary" (click)="exec()">Lưu</button>
             </div>
         </div>
     </div>

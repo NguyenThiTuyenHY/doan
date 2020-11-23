@@ -13,6 +13,18 @@ export class TopicComponent extends BaseComponent implements OnInit {
   item:any;
   itemsinger:any;
   them:any=true;
+  tendt:any;
+  loainc:any;
+  ten: any;
+  sohieu:any;
+  namsanxuat:any;
+  tap: any;
+  so: any;
+  trang: any;
+  soif: any;
+  minhchung: any;
+  thoigianbd:any;
+  thoigiankt:any;
   constructor(private injector:Injector) {
     super(injector)
    }
@@ -24,7 +36,7 @@ export class TopicComponent extends BaseComponent implements OnInit {
       editor.name = "content"
    });
    this._route.params.subscribe(params=>{   
-    this._api.get("api/detai/get_detai_pagesize?pagesize="+10+"&&pageindex="+1+"&&search=").subscribe(res=>{
+    this._api.get("api/detai/get_detai_pagesize?pagesize="+5+"&&pageindex="+0+"&&search=").subscribe(res=>{
       this.item = res;
       console.log(this.item);
     });

@@ -2,7 +2,7 @@
 
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Loại nhiệm vụ</h1>
-    <p class="mb-4">Quản lý danh sách chức vụ</p>
+    <p class="mb-4">Quản lý danh sách loại nhiệm vụ</p>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -17,17 +17,17 @@
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Tên đơn vị</th>
-                            <th>Tỷ lệ</th>
+                            <th>Tên loại nhiệm vụ</th>
                             <th>Ghi chú</th>
+                            <th>C</th>
                             <th>Chức năng</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>Tên đơn vị</th>
-                            <th>Tỷ lệ</th>
+                            <th>Tên loại nhiệm vụ</th>
                             <th>Ghi chú</th>
+                            <th>C</th>
                             <th>Chức năng</th>
                         </tr>
                     </tfoot>
@@ -60,21 +60,21 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Tên đơn vị</label>
-                    <input type="text" value="{{donvi}}" #dv class="form-control" id="exampleInputEmail1">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Tỷ lệ</label>
-                    <input type="text" value="{{tyle}}" #tl class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Tên loại nhiệm vụ</label>
+                    <input type="text" value="{{tenloainv}}" #tenlnv class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Ghi chú</label>
                     <input type="text" value="{{ghichu}}" #gc class="form-control" id="exampleInputEmail1">
                 </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">C</label>
+                    <input type="text" value="{{c}}" #c class="form-control" id="exampleInputEmail1">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" (click)="exec(dv.value,tl.value,gc.value)">Lưu</button>
+                <button type="button" class="btn btn-primary" (click)="exec(tenlnv.value,gc.value,c.value)">Lưu</button>
             </div>
         </div>
     </div>

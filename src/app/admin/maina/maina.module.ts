@@ -43,7 +43,7 @@ const mainaroutes:Routes = [
       {
         path:'thongke',
         component: StatisticalComponent
-      }    
+      }   
     ]
   }
 ]

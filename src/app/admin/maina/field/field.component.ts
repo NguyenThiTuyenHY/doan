@@ -1,6 +1,7 @@
 import { Component, OnInit ,Injector} from '@angular/core';
 import { BaseComponent } from 'src/app/lib/base-component';
 import Swal from 'sweetalert2';
+declare var $:any;
 @Component({
   selector: 'app-field',
   templateUrl: './field.component.html',
