@@ -1,9 +1,32 @@
 <div class="container-fluid">
-
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Tin tức</h1>
     <p class="mb-4">Quản lý danh sách tin tức</p>
-
+    <div class="container">
+        <br/>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <form class="card card-sm">
+                    <div class="card-body row no-gutters align-items-center">
+                        <div class="col-auto">
+                            Tìm kiếm
+                        </div>
+                        <!--end of col-->
+                        <div class="col">
+                            <input class="form-control form-control-lg form-control-borderless" #search (change)="preup_(search.value)" type="search" placeholder="Nhập nội dung tìm kiếm">
+                        </div>
+                        <!--end of col-->
+                        <div class="col-auto">
+                            <button class="btn btn-lg btn-success" (click)="search_()" type="button"><i class="fas fa-search" aria-hidden="true"></i></button>
+                        </div>
+                        <!--end of col-->
+                    </div>
+                </form>
+            </div>
+            <!--end of col-->
+        </div>
+    </div>
+    <br>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 row">
@@ -18,8 +41,9 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
+                                <th>STT</th>
                                 <th>Tiêu đề</th>
-                                <th>Tóm tắt</th>
+                                <th>Ngày đăng</th>
                                 <th>Hình ảnh</th>
                                 <th>Mã loại tin tức</th>
                                 <th>Lượt xem</th>
@@ -28,18 +52,20 @@
                         </thead>
                         <tfoot>
                             <tr>
+                                <th>STT</th>
                                 <th>Tiêu đề</th>
-                                <th>Tóm tắt</th>
+                                <th>Ngày đăng</th>
                                 <th>Hình ảnh</th>
-                                <th>Mã loại tin tức</th>
+                                <th>Loại tin tức</th>
                                 <th>Lượt xem</th>
                                 <th>Chức năng</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            <tr *ngFor="let dv of item.result">
+                            <tr *ngFor="let dv of item.result; let i = index;">
+                                <td>{{i+1}}</td>
                                 <td>{{dv.tieude}}</td>
-                                <td>{{dv.tomtat}}</td>
+                                <td>{{dv.ngaydang | date:"dd/MM/yyyy"}}</td>
                                 <td><img src="../../../../assets/images/news/{{dv.hinhanh}}" style="width: 50px; height: 50px;"></td>
                                 <td>{{dv.tenloaitt}}</td>
                                 <td>{{dv.luotem}}</td>
@@ -52,6 +78,19 @@
                     </table>
                 </div>
             </ng-container>
+            <ul class="pagination" *ngIf="item.total>6">
+                <li class="page-item">
+                    <a class="page-link" (click)="onpagination_(pageindex-1)" href="javascript:void(0)">
+                        << </a>
+                </li>
+                <ng-container *ngFor="let i of pagination(item.total)">
+                    <li class="page-item" [ngClass]="{'active':pageindex==i}">
+                        <a class="page-link" *ngIf="pageindex==i">{{i}}</a>
+                        <a class="page-link" (click)="onpagination_(i)" href="javascript:void(0)" *ngIf="pageindex!=i">{{i}}</a>
+                    </li>
+                </ng-container>
+                <li class="page-item"><a (click)="onpagination_(pageindex+1)" class="page-link" href="javascript:void(0)">>></a></li>
+            </ul>
         </div>
     </div>
 </div>
@@ -77,7 +116,7 @@
                 </div>
                 <div class="form-group">
                     <label for="txthinhanh">Hình ảnh</label>
-                    <input type="file" class="form-control-file" (change)="onimg($event)" #ha id="txthinhanh">
+                    <input type="file" accept="image/*" class="form-control-file" (change)="onimg($event)" #ha id="txthinhanh">
                 </div>
                 <div class="form-group">
                     <label for="txtloaitintuc">Loại tin tức</label>

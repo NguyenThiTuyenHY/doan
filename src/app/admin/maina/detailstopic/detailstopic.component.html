@@ -1,0 +1,147 @@
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Đề tài</h1>
+    <p class="mb-4">Chi tiết đề tài</p>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 row">
+            <h6 class="col-sm-10 m-0 font-weight-bold text-primary">Thông tin liên quan đến đề tài</h6>
+        </div>
+        <div class="card-body">
+            <h5>Thông tin về đề tài : </h5>
+            <div class="row">
+                <div class="col-sm-6">
+                    <p>Tên đề tài: {{itemdetai.tendetai}}</p>
+                    <p>Tập: {{itemdetai.tap}}</p>
+                    <p>Trang: {{itemdetai.trang}}</p>
+                    <p>Tình trạng: {{itemdetai.tinhtrang}}</p>
+                    <p>Minh chứng: {{itemdetai.minhchung}}</p>
+                </div>
+                <div class="col-sm-6">
+                    <p>Số hiệu ISSN: {{itemdetai.sohieu}}</p>
+                    <p>Số: {{itemdetai.so}}</p>
+                    <p>Chỉ số Impact Factor(đối với các tạp chí ISI): {{itemdetai.soif}}</p>
+                    <p *ngIf="itemdetai.tinhtrang==4">Kết quả đánh giá: {{resultkqbv(itemdetai.kqbv)}}</p>
+                    <p>Cấp độ bảo vệ: {{resultbv(itemdetai.capbv)}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p>Ghi chú (Hình thức, quy mô, địa chỉ áp dụng của Các công trình, kết quả nghiên cứu được áp dụng trong thực tiễn): </p>
+                    <p></p>
+                </div>
+            </div>
+            <div>
+                <h5>Sở hữu trí tuệ</h5>
+                <ng-container *ngIf="itemsohuu.length > 0">
+                    <table class="table table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên sở hữu</th>
+                                <th>Ghi chú</th>
+                                <th>Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên sở hữu</th>
+                                <th>Ghi chú</th>
+                                <th>Chức năng</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr *ngFor="let sh of itemsohuu; let i = index;">
+                                <td>{{i+1}}</td>
+                                <td>{{sh.tensohuu}}</td>
+                                <td>{{sh.ghichu}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="edit_sohuu(sh.id)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
+                                    <button type="button" class="btn btn-primary btn-sm" (click)="delete_sohuu(sh.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+                <ng-container *ngIf="itemsohuu.length == 0">
+                    <p>Danh sách rỗng</p>
+                </ng-container>
+            </div>
+            <div>
+                <h5>Nhóm tác giả</h5>
+                <ng-container *ngIf="itemnhomtg.length > 0">
+                    <table class="table table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Họ tên</th>
+                                <th>Chức vụ</th>
+                                <th>Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>STT</th>
+                                <th>Họ tên</th>
+                                <th>Chức vụ</th>
+                                <th>Chức năng</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr *ngFor="let tg of itemnhomtg; let i = index;">
+                                <td>{{i+1}}</td>
+                                <td>{{tg.hoten}}</td>
+                                <td>{{tg.chucvu}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="edit_nhomtg(tg.id)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
+                                    <button type="button" class="btn btn-primary btn-sm" (click)="delete_nhomtg(tg.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+                <ng-container *ngIf="itemsohuu.length == 0">
+                    <p>Danh sách rỗng</p>
+                </ng-container>
+            </div>
+            <h5>Hồ sơ nhà tài trợ</h5>
+            <ng-container *ngIf="itemhoso.length > 0">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên cơ sở</th>
+                            <th>Minh chứng</th>
+                            <th>Chức năng</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên cơ sở</th>
+                            <th>Minh chứng</th>
+                            <th>Chức năng</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <tr *ngFor="let hs of itemhoso; let i = index;">
+                            <td>{{i+1}}</td>
+                            <td>{{hs.ten}}</td>
+                            <td>{{hs.minhchung}}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="edit_hoso(hs.id)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-primary btn-sm" (click)="delete_hoso(hs.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+            <ng-container *ngIf="itemsohuu.length == 0">
+                <p>Danh sách rỗng</p>
+            </ng-container>
+        </div>
+    </div>
+</div>

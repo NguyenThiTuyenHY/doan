@@ -24,6 +24,9 @@ export class NewsComponent extends BaseComponent implements OnInit {
    insert:any = true;
    ckeditorContent:any;
    itemloai:any;
+   pageindex: any = 1;
+   pagesize: any = 5;
+   ser:any;
   ngOnInit(): void {
     CKEDITOR.on('instanceCreated', function (event, data) {
       var editor = event.editor,
@@ -31,7 +34,7 @@ export class NewsComponent extends BaseComponent implements OnInit {
       editor.name = "content"
    });
     this._route.params.subscribe(params=>{   
-      this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+10+"&&pageindex="+1+"&&search=").subscribe(res=>{
+      this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
         this.item = res;
         console.log(this.item);
       });
@@ -41,6 +44,49 @@ export class NewsComponent extends BaseComponent implements OnInit {
         this.loaitintuc = this.itemloai[0].id;
       });
     })
+  }
+  // next(){
+  //   this.pageindex = this.pageindex -1;
+  //   if(this.pageindex < 1)
+  //     this.pageindex = 1;
+  //   this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
+  //     this.item = res;
+  //   });
+  // }
+  // pre(){
+  //   var a = (this.item.total / this.pagesize).toFixed();
+  //   this.pageindex = this.pageindex + 1;
+  //   if(this.pageindex > a)
+  //     this.pageindex = a;
+  //   this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
+  //     this.item = res;
+  //   });
+  // }
+  search_(){
+    this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
+      this.item = res;
+      console.log(this.item);
+    });
+  }
+  onpagination_(i){
+    var a = (this.item.total / this.pagesize).toFixed();
+    if(i<1){
+      this.pageindex = 1;
+    }
+    else{
+      if(i>a){
+        this.pageindex = a;
+      }
+      else{
+        this.pageindex = i;
+      }
+    }  
+    this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
+      this.item = res;
+    });
+  }
+  preup_(search){
+    this.ser = search;
   }
   create(){
     this.insert = true;
@@ -69,14 +115,16 @@ export class NewsComponent extends BaseComponent implements OnInit {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        this._api.delete("api/tintuc/delete_loaitintuc/"+matt).subscribe(res=>{
+        this._api.delete("api/tintuc/delete_tintuc/"+matt).subscribe(res=>{
           if(res){           
             swalWithBootstrapButtons.fire(
               'Đã xóa!',
               'Tệp của bạn đã bị xóa.',
               'success'
             );
-            this.loaddata();
+            this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
+              this.itemsinger = res;
+            });
           }
           else{
             swalWithBootstrapButtons.fire(
@@ -102,23 +150,26 @@ export class NewsComponent extends BaseComponent implements OnInit {
   edit(matt){
     this.insert = false;
     this._api.get("api/tintuc/get_tintuc_id/"+matt).subscribe(res=>{
-      this.item = res;
-      this.tieude = this.item.tieude;
-      this.tomtat = this.item.tomtat;
+      this.itemsinger = res;
+      this.tieude = this.itemsinger.tieude;
+      this.tomtat = this.itemsinger.tomtat;
       this.hinhanh = "";
-      this.loaitintuc = this.item.idloai;
-      CKEDITOR.instances.content.setData(this.item.noidung);
+      this.loaitintuc = this.itemsinger.idloai;
+      CKEDITOR.instances.content.setData(this.itemsinger.noidung);
     });
   }
   onimg(event){
     this.hinhanh = event.target;
   }
-  itemsinger:any;
-  loaddata(){
-    this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+10+"&&pageindex="+1+"&&search=").subscribe(res=>{
-      this.itemsinger = res;
-    });
+  pagination(tong){
+    let a:number[]= [];
+    var total = (tong/this.pagesize).toFixed();
+    for(var i = 1; i <= parseInt(total); i++){
+      a.push(i);
+    }
+    return a;
   }
+  itemsinger:any;
   exec(td,tt,ltt){
     this.getEncodeFromImage(this.hinhanh).subscribe(res=>{
       var formdata = {
@@ -140,7 +191,9 @@ export class NewsComponent extends BaseComponent implements OnInit {
               showConfirmButton: false,
               timer: 1500
             });         
-            this.loaddata();
+            this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
+              this.itemsinger = res;
+            });
             this.closebutton.nativeElement.click();
           }
           else{
@@ -155,7 +208,7 @@ export class NewsComponent extends BaseComponent implements OnInit {
         });
       }
       else{
-        this._api.put("api/loaitintuc/edit_loaitintuc/"+this.itemsinger.id,formdata).subscribe(res=>{
+        this._api.put("api/tintuc/edit_tintuc/"+this.itemsinger.id,formdata).subscribe(res=>{
           if(res){           
             Swal.fire({
               position: 'top-end',
@@ -164,7 +217,9 @@ export class NewsComponent extends BaseComponent implements OnInit {
               showConfirmButton: false,
               timer: 1500
             });
-            this.loaddata();
+            this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
+              this.itemsinger = res;
+            });
             this.closebutton.nativeElement.click();
           }
           else{

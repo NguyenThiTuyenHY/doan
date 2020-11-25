@@ -15,6 +15,12 @@ import { BackgroupComponent } from './backgroup/backgroup.component';
 import { MissiontypeComponent } from './missiontype/missiontype.component';
 import { TopicComponent } from './topic/topic.component';
 import { ResearchactivitiesComponent } from './researchactivities/researchactivities.component';
+import { DetailstopicComponent } from './detailstopic/detailstopic.component';
+import { ErrorComponent } from '../commona/error/error.component';
+import { AccessComponent } from '../commona/access/access.component';
+import { LoginComponent } from '../commona/login/login.component';
+import {AuthGuard} from '../../lib/auth.guard';
+  import { from } from 'rxjs';
 const mainaroutes:Routes = [
   {
     path: '',
@@ -43,13 +49,34 @@ const mainaroutes:Routes = [
       {
         path:'thongke',
         component: StatisticalComponent
-      }   
-    ]
-  }
+      },
+      {
+        path:'detai',
+        component: TopicComponent
+      },
+      {
+        path:'chitietdetai/:id',
+        component: DetailstopicComponent
+      },
+      {
+        path:'error',
+        component: ErrorComponent
+      },
+      {
+        path: 'truycap',
+        component: AccessComponent
+      },     
+    ],
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'dangnhap',
+    component: LoginComponent
+  } 
 ]
 
 @NgModule({
-  declarations: [StatisticalComponent,MainaComponent, UnitComponent, FieldComponent, TypenewsComponent, NewsComponent, PositionComponent, BackgroupComponent, MissiontypeComponent, TopicComponent, ResearchactivitiesComponent],
+  declarations: [StatisticalComponent,MainaComponent, UnitComponent, FieldComponent, TypenewsComponent, NewsComponent, PositionComponent, BackgroupComponent, MissiontypeComponent, TopicComponent, ResearchactivitiesComponent, DetailstopicComponent, LoginComponent, AccessComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(mainaroutes),

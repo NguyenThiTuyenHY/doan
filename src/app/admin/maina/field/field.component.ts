@@ -14,7 +14,7 @@ export class FieldComponent extends BaseComponent implements OnInit {
   tenlinhvuc:any;
   ngOnInit(): void {
     this._route.params.subscribe(params=>{   
-      this._api.get("api/linhvuc/get_linhvuc_pagesize?pagesize="+10+"&&pageindex="+1+"&&search=").subscribe(res=>{
+      this._api.get("api/linhvuc/get_linhvuc_pagesize?pagesize="+10+"&&pageindex="+0+"&&search=").subscribe(res=>{
         this.item = res;
         console.log(this.item);
       });
@@ -22,7 +22,7 @@ export class FieldComponent extends BaseComponent implements OnInit {
   }
   constructor(private ijnector:Injector) {
     super(ijnector)
-   }
+  }
   edit(id){
     this.them = false;
     this._api.get("api/linhvuc/get_linhvuc_id/"+id).subscribe(res=>{

@@ -18,13 +18,10 @@
                     <thead>
                         <tr>
                             <th>Tên đề tài</th>
-                            <th>Cán bộ</th>
-                            <th>Hoạt động nghiên cứu</th>
                             <th>Số hiệu</th>
                             <th>Số trang</th>
                             <th>Lĩnh vực</th>
-                            <th>Loại nhiệm vụ</th>
-                            <th>Hoạt động nghiên cứu</th>
+                            <th>Cấp bảo vệ</th>
                             <th>Thời gian</th>
                             <th>Minh chứng</th>
                             <th>Tình trạng</th>
@@ -34,13 +31,9 @@
                     <tfoot>
                         <tr>
                             <th>Tên đề tài</th>
-                            <th>Cán bộ</th>
-                            <th>Hoạt động nghiên cứu</th>
                             <th>Số hiệu</th>
                             <th>Số trang</th>
                             <th>Lĩnh vực</th>
-                            <th>Loại nhiệm vụ</th>
-                            <th>Hoạt động nghiên cứu</th>
                             <th>Cấp bảo vệ</th>
                             <th>Thời gian</th>
                             <th>Minh chứng</th>
@@ -49,19 +42,24 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                        <tr *ngFor="let dt of item">
+                        <tr *ngFor="let dt of item.result">
                             <td>{{dt.tendetai}}</td>
-                            <td>{{dt.tennv}}</td>
-                            <td>{{dt.tenhdnc}}</td>
                             <td>{{dt.sohieu}}</td>
                             <td>{{dt.sotrang}}</td>
-                            <td>{{dt.tenhdnckh}}</td>
                             <td>{{dt.tenlinhvuc}}</td>
-                            <td>{{dt.tenloainv}}</td>
-                            <td>{{dt.capbv}}</td>
-                            <td>{{dt.thoigianbd}}</td>
+                            <td>{{resultbv(dt.capbv)}}</td>
+                            <td>{{dt.thoigianbd | date:"yyyy"}} - {{dt.thoigiankt | date:"yyyy"}} </td>
+                            <td>{{dt.minhch}}</td>
                             <td>
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="edit(dv.madonvi)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
+                                <span *ngIf="dt.tinhtrang == 1" class="badge badge-primary">Chưa duyệt</span>
+                                <span *ngIf="dt.tinhtrang == 2" class="badge badge-info">Duyệt</span>
+                                <span *ngIf="dt.tinhtrang == 3" class="badge badge-warning">Đang tiến hành</span>
+                                <span *ngIf="dt.tinhtrang == 4" class="badge badge-success">Hoàn thành</span>
+                                <span *ngIf="dt.tinhtrang == 5" class="badge badge-danger">Xin thêm thời gian</span>
+                            </td>
+                            <td>
+                                <a class="btn btn-primary btn-sm" [routerLink]="['/admin/chitietdetai',dt.id]"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="edit(dt.id)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-primary btn-sm" (click)="delete_(dt.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
                             </td>
                         </tr>
@@ -71,102 +69,87 @@
         </div>
     </div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thông tin đơn vị</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thông tin đề tài</h5>
                 <button type="button" id="closeModel" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Tên đề tài</label>
+                    <label for="exampleInputEmail1">Tên đề tài:</label>
                     <input type="text" value="{{tendt}}" #dv class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Loại nghiên cứu</label>
-                    <input type="text" value="{{loainc}}" #gc class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Số hiệu:</label>
+                    <input type="text" value="{{sohieu}}" #sohieuu class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Tên </label>
-                    <input type="text" value="{{ten}}" #gc class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Tập:</label>
+                    <input type="number" min="0" value="{{tap}}" #ta class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Số hiệu</label>
-                    <input type="text" value="{{sohieu}}" #gc class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Số:</label>
+                    <input type="number" min="0" value="{{so}}" #soo class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Năm sản xuất</label>
-                    <input type="text" value="{{namsanxuat}}" #gc class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Trang:</label>
+                    <input type="number" min="0" value="{{trang}}" #trangg class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Tập</label>
-                    <input type="text" value="{{tap}}" #gc class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Số Impact Factor(đối với các tạp chí ISI):</label>
+                    <input type="text" value="{{soif}}" #soiff class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Số</label>
-                    <input type="text" value="{{so}}" #gc class="form-control" id="exampleInputEmail1">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Trang</label>
-                    <input type="text" value="{{trang}}" #gc class="form-control" id="exampleInputEmail1">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Sôif</label>
-                    <input type="text" value="{{soif}}" #gc class="form-control" id="exampleInputEmail1">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Minh chứng</label>
-                    <input type="text" value="{{minhchung}}" #gc class="form-control" id="exampleInputEmail1">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Ghi chú</label>
+                    <label for="exampleInputEmail1">Ghi chú:</label>
                     <ckeditor #myEditor [(ngModel)]="ckeditorContent" [config]="{uiColor: '#a4a4a4'}" debounce="500"></ckeditor>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Lĩnh vực</label>
-                    <select #lv>
-                        <option></option>
+                    <label for="exampleInputEmail1">Lĩnh vực:</label>
+                    <select #lv class="form-control">
+                        <option *ngFor="let lv of itemlinhvuc" value="{{lv.id}}">{{lv.tenlinhvuc}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Loại nhiệm vụ</label>
-                    <select #lnv>
-                        <option></option>
+                    <label for="exampleInputEmail1">Loại nhiệm vụ:</label>
+                    <select #lnv class="form-control">
+                        <option *ngFor="let lnv of itemloainhiemvu" value="{{lnv.id}}">{{lnv.tenloainv}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">hoạt động nghiên cứu khoa học</label>
-                    <select #hdnckh>
-                        <option></option>
+                    <label for="exampleInputEmail1">hoạt động nghiên cứu khoa học:</label>
+                    <select #hdnckh class="form-control">
+                        <option *ngFor="let hdnc of itemhoatdong" title="{{hdnc.tenhdnckh}}" value="{{hdnc.id}}">{{hdnc.tenhdnckh.split(' ').length > 11 ? splittenhdnckh(hdnc.tenhdnckh) : hdnc.tenhdnckh}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Thời gian bắt đầu</label>
-                    <input type="datetime" value="{{thoigianbd}}" #tgbd class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Thời gian bắt đầu:</label>
+                    <input type="date" value="{{thoigianbd}}" #tgbd class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Thời gian kết thúc</label>
-                    <input type="datetime" value="{{thoigiankt}}" #tgkt class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Thời gian kết thúc:</label>
+                    <input type="date" value="{{thoigiankt}}" #tgkt class="form-control" id="exampleInputEmail1">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Cấp bảo vệ</label>
-                    <select #cbv>
-                        <option></option>
+                    <label for="exampleInputEmail1">Cấp bảo vệ:</label>
+                    <select #cbv class="form-control">
+                        <option value="1">Đề tài cấp bộ</option>
+                        <option value="2">Đề tài cấp trường</option>
+                        <option value="3">Đề tài cấp nhà nước</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Minh chứng</label>
-                    <input type="text" value="{{minhchung}}" #cm class="form-control" id="exampleInputEmail1">
+                    <label for="exampleInputEmail1">Minh chứng:</label>
+                    <input type="file" accept="application/pdf" (change)="changemc($event)" class="form-control-file" id="exampleFormControlFile1">
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" (click)="exec()">Lưu</button>
+                <button type="button" class="btn btn-primary" (click)="exec(dv.value, sohieuu.value, ta.value, soo.value, trangg.value, soiff.value, lv.value, lnv.value, hdnckh.value, tgbd.value, tgkt.value, cbv.value)">Lưu</button>
             </div>
         </div>
     </div>

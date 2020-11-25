@@ -27,7 +27,8 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                        <tr *ngFor="let lv of item">
+                        <tr *ngFor="let lv of item; let i = index;">
+                            <td>{{i+1}}</td>
                             <td>{{lv.tenlinhvuc}}</td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="edit(lv.id)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
@@ -45,7 +46,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thông tin tin tức</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thông tin lĩnh vực</h5>
                 <button type="button" #closebutton id="closeModel" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
