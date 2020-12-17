@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:44329'
+  apiUrl: 'https://localhost:44329',
+  postSaveRteImage: 'E:\doan5_Quanlyhethong\angularNCKH\src\assets\images\news'
 };
 
 /*

@@ -1,4 +1,4 @@
-import { Component, OnInit ,Injector} from '@angular/core';
+import { Component, OnInit ,Injector, ViewChild} from '@angular/core';
 import { BaseComponent } from 'src/app/lib/base-component';
 import Swal from 'sweetalert2';
 declare var $:any;
@@ -8,13 +8,17 @@ declare var $:any;
   styleUrls: ['./field.component.css']
 })
 export class FieldComponent extends BaseComponent implements OnInit {
+  @ViewChild('closebutton') closebutton;
   item:any;
   itemsinger:any;
   them:any=true;
   tenlinhvuc:any;
+  pageindex: any = 1;
+  pagesize: any = 5;
+  ser:any="";
   ngOnInit(): void {
     this._route.params.subscribe(params=>{   
-      this._api.get("api/linhvuc/get_linhvuc_pagesize?pagesize="+10+"&&pageindex="+0+"&&search=").subscribe(res=>{
+      this._api.get("api/linhvuc/get_linhvuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
         this.item = res;
         console.log(this.item);
       });
@@ -22,6 +26,40 @@ export class FieldComponent extends BaseComponent implements OnInit {
   }
   constructor(private ijnector:Injector) {
     super(ijnector)
+  }
+  search_(){
+    this._api.get("api/linhvuc/get_linhvuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
+      this.item = res;
+    });
+  }
+  onpagination_(i){
+    var a = Math.ceil(this.item.total / this.pagesize);
+    if(i<1){
+      this.pageindex = 1;
+    }
+    else{
+      if(i>a){
+        this.pageindex = a;
+      }
+      else{
+        this.pageindex = i;
+      }
+    }  
+    this._api.get("api/linhvuc/get_linhvuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
+      this.item = res;
+      console.log(this.item);
+    });
+  }
+  pagination(tong){
+    let a:number[]= [];
+    var total = Math.ceil(tong/this.pagesize);
+    for(var i = 1; i <= total; i++){
+      a.push(i);
+    }
+    return a;
+  }
+  preup_(search){
+    this.ser = search;
   }
   edit(id){
     this.them = false;
@@ -36,7 +74,7 @@ export class FieldComponent extends BaseComponent implements OnInit {
     this.tenlinhvuc = "";
   }
   loaddata(){
-    this._api.get("api/linhvuc/get_linhvuc_pagesize?pagesize="+10+"&&pageindex="+1+"&&search=").subscribe(res=>{
+    this._api.get("api/linhvuc/get_linhvuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
       this.item = res;
       console.log(this.item);
     })
@@ -56,7 +94,7 @@ export class FieldComponent extends BaseComponent implements OnInit {
             timer: 1500
           });         
           this.loaddata();
-          $("#exampleModal").modal('hide');
+          this.closebutton.nativeElement.click();
         }
         else{
           Swal.fire({
@@ -80,7 +118,7 @@ export class FieldComponent extends BaseComponent implements OnInit {
             timer: 1500
           });
           this.loaddata();
-          $("#closeModel").click();
+          this.closebutton.nativeElement.click();
         }
         else{
           Swal.fire({

@@ -19,8 +19,18 @@ import { DetailstopicComponent } from './detailstopic/detailstopic.component';
 import { ErrorComponent } from '../commona/error/error.component';
 import { AccessComponent } from '../commona/access/access.component';
 import { LoginComponent } from '../commona/login/login.component';
-import {AuthGuard} from '../../lib/auth.guard';
-  import { from } from 'rxjs';
+import { AuthGuard } from '../../lib/auth.guard';
+import { RoleGuard } from '../../lib/auth.guard';
+import { OfficesComponent } from './offices/offices.component';
+import { ChangepassComponent } from './changepass/changepass.component';
+import { RoleComponent } from './role/role.component';
+import { DepartmentComponent } from './department/department.component';
+import { PropetyComponent } from './propety/propety.component';
+import { StaffComponent } from './staff/staff.component';
+import { EditbackgroupComponent } from './editbackgroup/editbackgroup.component';
+import { EdituserComponent } from './edituser/edituser.component';
+import { ErroraccesComponent } from './erroracces/erroracces.component';
+// import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 const mainaroutes:Routes = [
   {
     path: '',
@@ -32,51 +42,173 @@ const mainaroutes:Routes = [
       },
       {
         path:'donvi',
-        component: UnitComponent
+        component: UnitComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
       },
       {
         path: 'linhvuc',
-        component:FieldComponent
+        component:FieldComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
       },
       {
         path: 'loaitintuc',
-        component:TypenewsComponent
+        component:TypenewsComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
       },
       {
         path: 'tintuc',
-        component:NewsComponent
+        component:NewsComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
       },
       {
         path:'thongke',
-        component: StatisticalComponent
+        component: StatisticalComponent,
       },
       {
         path:'detai',
-        component: TopicComponent
+        component: TopicComponent,
+        canActivate: [RoleGuard]
       },
       {
         path:'chitietdetai/:id',
-        component: DetailstopicComponent
+        component: DetailstopicComponent,
+        canActivate: [RoleGuard]
       },
       {
         path:'error',
-        component: ErrorComponent
+        component: ErrorComponent,
+        canActivate: [RoleGuard]
       },
       {
         path: 'truycap',
         component: AccessComponent
-      },     
+      }, 
+      {
+        path: 'nguoidung',
+        component: OfficesComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [1]
+        }
+      },
+      {
+        path: 'doimk',
+        component: ChangepassComponent
+      },
+      {
+        path: 'hoatdongnghiencuu',
+        component: ResearchactivitiesComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
+      },
+      {
+        path: 'chucvu',
+        component: PositionComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
+      },
+      {
+        path: 'loainhiemvu',
+        component: MissiontypeComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
+      },
+      {
+        path: 'phongban',
+        component: DepartmentComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
+      },
+      {
+        path: 'sohuutritue',
+        component: PropetyComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
+      },
+      {
+        path: 'nhom',
+        component: RoleComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
+      },
+      {
+        path: 'nhanvien',
+        component: StaffComponent
+      },
+      {
+        path: 'lylich/:id',
+        component: BackgroupComponent
+      },
+      {
+        path: 'sualylich/:id',
+        component: EditbackgroupComponent
+      },{
+        path: 'suataikhoan/:id',
+        component: EdituserComponent
+      },
+      {
+        path: 'loitruycap',
+        component: ErroraccesComponent
+      }
     ],
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard]
   },
   {
     path: 'dangnhap',
     component: LoginComponent
-  } 
+  }
 ]
 
 @NgModule({
-  declarations: [StatisticalComponent,MainaComponent, UnitComponent, FieldComponent, TypenewsComponent, NewsComponent, PositionComponent, BackgroupComponent, MissiontypeComponent, TopicComponent, ResearchactivitiesComponent, DetailstopicComponent, LoginComponent, AccessComponent],
+  declarations: [
+    StatisticalComponent,
+    MainaComponent, 
+    UnitComponent, 
+    FieldComponent, 
+    TypenewsComponent, 
+    NewsComponent, 
+    PositionComponent, 
+    BackgroupComponent, 
+    MissiontypeComponent, 
+    TopicComponent, 
+    ResearchactivitiesComponent, 
+    DetailstopicComponent, 
+    LoginComponent, 
+    AccessComponent, 
+    OfficesComponent, 
+    ChangepassComponent, 
+    RoleComponent, 
+    DepartmentComponent, 
+    PropetyComponent, 
+    StaffComponent, 
+    EditbackgroupComponent,
+    ErroraccesComponent,
+    EdituserComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(mainaroutes),

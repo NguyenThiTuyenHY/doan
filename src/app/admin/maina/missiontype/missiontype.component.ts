@@ -15,34 +15,83 @@ export class MissiontypeComponent extends BaseComponent implements OnInit {
    tenloainv:any;
    ghichu:any;
    c:any;
+   pageindex: any = 1;
+   pagesize: any = 5;
+   ser:any;
   ngOnInit(): void {
+    this._route.params.subscribe(params=>{
+      this._api.get("api/loainhiemvu/get_loainhiemvu_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
+        this.item = res;
+        console.log(this.item);
+      })
+    })
   }
   them:any;
   itemsinger:any;
   item:any;
+  search_(){
+    this._api.get("api/loainhiemvu/get_loainhiemvu_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
+      this.item = res;
+      console.log(this.item);
+    });
+  }
+  onpagination_(i){
+    var a = Math.ceil(this.item.total / this.pagesize);
+    if(i<1){
+      this.pageindex = 1;
+    }
+    else{
+      if(i>a){
+        this.pageindex = a;
+      }
+      else{
+        this.pageindex = i;
+      }
+    }  
+    this._api.get("api/loainhiemvu/get_loainhiemvu_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
+      this.item = res;
+    });
+  }
+  pagination(tong){
+    let a:number[]= [];
+    var total = Math.ceil(tong/this.pagesize);
+    for(var i = 1; i <= total; i++){
+      a.push(i);
+    }
+    return a;
+  }
+  preup_(search){
+    this.ser = search;
+  }
   edit(id){
     this.them = false;
-    this._api.get("api/donvi/get_don_vi_by_id/"+id).subscribe(res=>{
+    this._api.get("api/loainhiemvu/get_loainhiemvu_id/"+id).subscribe(res=>{
       this.itemsinger = res;
+      this.tenloainv = this.itemsinger.tenloainv;
+      this.ghichu = this.itemsinger.ghichu;
+      this.c = this.itemsinger.c;
     });
   }
   create(){
     this.them = true;
+    this.tenloainv = "";
+    this.ghichu ="";
+    this.c ="";
   }
   loaddata(){
-    this._api.get("api/donvi/get_don_vi_all").subscribe(res=>{
+    this._api.get("api/loainhiemvu/get_loainhiemvu_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
       this.item = res;
       console.log(this.item);
     })
   }
   exec(dv,tl,gc){
     var Formdata = {
-      tendonvi: dv,
+      tenloainv: dv,
       ghichu: gc,
-      tyle: parseInt(tl)
+      c: parseInt(tl)
     }
     if(this.them){
-      this._api.post("api/donvi/create_don_vi",Formdata).subscribe(res=>{
+      this._api.post("api/loainhiemvu/create_loainhiemvu",Formdata).subscribe(res=>{
         if(res){           
           Swal.fire({
             position: 'top-end',
@@ -66,7 +115,7 @@ export class MissiontypeComponent extends BaseComponent implements OnInit {
       });
     }
     else{
-      this._api.put("api/donvi/edit_don_vi/"+this.itemsinger.madonvi,Formdata).subscribe(res=>{
+      this._api.put("api/loainhiemvu/edit_loainhiemvu/"+this.itemsinger.id,Formdata).subscribe(res=>{
         if(res){           
           Swal.fire({
             position: 'top-end',
@@ -109,7 +158,7 @@ export class MissiontypeComponent extends BaseComponent implements OnInit {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        this._api.delete("api/donvi/delete_don_vi/"+id).subscribe(res=>{
+        this._api.delete("api/loainhiemvu/delete_loainhiemvu/"+id).subscribe(res=>{
           if(res){           
             swalWithBootstrapButtons.fire(
               'Đã xóa!',

@@ -19,6 +19,5 @@ export class HeaderComponent implements OnInit {
   }
   menuclick(index){
     this.menuaction = index;
-    alert(index);
   }
 }

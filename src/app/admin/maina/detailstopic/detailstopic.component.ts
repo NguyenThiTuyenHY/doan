@@ -13,6 +13,7 @@ export class DetailstopicComponent extends BaseComponent implements OnInit {
   itemnhomtg:any;
   itemhoso: any;
   itemdetai:any;
+  them:any;
   constructor(private injector: Injector) {
     super(injector)
    }
@@ -76,6 +77,9 @@ export class DetailstopicComponent extends BaseComponent implements OnInit {
         break;
     }
     return kq;
+  }
+  insert(i){
+    this.them = i;
   }
   resultbv(capbv){
     switch(capbv){

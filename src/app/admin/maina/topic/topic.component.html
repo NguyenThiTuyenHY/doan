@@ -61,6 +61,10 @@
                                 <a class="btn btn-primary btn-sm" [routerLink]="['/admin/chitietdetai',dt.id]"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="edit(dt.id)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-primary btn-sm" (click)="delete_(dt.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-primary btn-sm" (click)="delete_(dt.id)">Huỷ</button>
+                                <button type="button" class="btn btn-primary btn-sm" (click)="delete_(dt.id)">Gia hạn</button>
+                                <button type="button" class="btn btn-primary btn-sm" (click)="delete_(dt.id)">Xác nhận</button>
+                                <button type="button" class="btn btn-primary btn-sm" (click)="delete_(dt.id)">Hoàn thành</button>
                             </td>
                         </tr>
                     </tbody>
@@ -121,7 +125,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">hoạt động nghiên cứu khoa học:</label>
+                    <label for="exampleInputEmail1">Hoạt động nghiên cứu khoa học:</label>
                     <select #hdnckh class="form-control">
                         <option *ngFor="let hdnc of itemhoatdong" title="{{hdnc.tenhdnckh}}" value="{{hdnc.id}}">{{hdnc.tenhdnckh.split(' ').length > 11 ? splittenhdnckh(hdnc.tenhdnckh) : hdnc.tenhdnckh}}</option>
                     </select>
@@ -141,10 +145,6 @@
                         <option value="2">Đề tài cấp trường</option>
                         <option value="3">Đề tài cấp nhà nước</option>
                     </select>
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Minh chứng:</label>
-                    <input type="file" accept="application/pdf" (change)="changemc($event)" class="form-control-file" id="exampleFormControlFile1">
                 </div>
             </div>
             <div class="modal-footer">

@@ -1,6 +1,9 @@
 import { Component, OnInit ,Injector, ViewChild} from '@angular/core';
 import { BaseComponent } from 'src/app/lib/base-component';
 import Swal from 'sweetalert2';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
+import { environment } from 'src/environments/environment';
 declare var CKEDITOR: any;
 @Component({
   selector: 'app-news',
@@ -10,6 +13,7 @@ declare var CKEDITOR: any;
 
 export class NewsComponent extends BaseComponent implements OnInit {
   @ViewChild('closebutton') closebutton;
+  // public Editor = ClassicEditor;
   constructor(private ijnector:Injector) {
     super(ijnector)
    }
@@ -27,11 +31,23 @@ export class NewsComponent extends BaseComponent implements OnInit {
    pageindex: any = 1;
    pagesize: any = 5;
    ser:any;
+   public editorConfig = {
+    simpleUpload: {
+      // The URL that the images are uploaded to.
+      uploadUrl: environment.postSaveRteImage,
+    
+      // Headers sent along with the XMLHttpRequest to the upload server.
+      headers: {
+        'X-CSRF-TOKEN': 'CSFR-Token',
+        Authorization: 'Bearer <JSON Web Token>'
+      }
+    }
+  }
   ngOnInit(): void {
     CKEDITOR.on('instanceCreated', function (event, data) {
       var editor = event.editor,
       element = editor.element;
-      editor.name = "content"
+      editor.name = "content";
    });
     this._route.params.subscribe(params=>{   
       this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
@@ -123,7 +139,7 @@ export class NewsComponent extends BaseComponent implements OnInit {
               'success'
             );
             this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
-              this.itemsinger = res;
+              this.item = res;
             });
           }
           else{
@@ -192,7 +208,7 @@ export class NewsComponent extends BaseComponent implements OnInit {
               timer: 1500
             });         
             this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
-              this.itemsinger = res;
+              this.item = res;
             });
             this.closebutton.nativeElement.click();
           }
@@ -218,7 +234,7 @@ export class NewsComponent extends BaseComponent implements OnInit {
               timer: 1500
             });
             this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
-              this.itemsinger = res;
+              this.item = res;
             });
             this.closebutton.nativeElement.click();
           }
