@@ -14,18 +14,17 @@ export class LoginComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) {
     if (this.authenticationService.userValue) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/admin/dangnhap']);
     }
    }
   error = '';
   returnUrl: string;
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin/';
   }
   dangnhap(tk, mk){
     const md5 = new Md5();
     var a = md5.appendStr(mk).end();
-    alert(a);
     this.authenticationService
       .login(tk, a.toString())
       .pipe(first())
@@ -35,6 +34,7 @@ export class LoginComponent implements OnInit {
         },
         (error) => {
           this.error = error; 
+          alert(this.error);
         }
       );
   }

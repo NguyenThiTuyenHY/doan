@@ -27,9 +27,14 @@ export class TopicComponent extends BaseComponent implements OnInit {
   itemlinhvuc: any;
   itemloainhiemvu: any;
   itemhoatdong: any;
+  chon_ :any = 1;
+  pagesize:any = 5;
+  pageindex:any = 1;
   constructor(private injector:Injector) {
     super(injector)
-   }
+  }
+  ser:any = "";
+
   ckeditorContent:any;
   ngOnInit(): void {
     CKEDITOR.on('instanceCreated', function (event, data) {
@@ -38,7 +43,7 @@ export class TopicComponent extends BaseComponent implements OnInit {
       editor.name = "content"
    });
    this._route.params.subscribe(params=>{   
-    this._api.get("api/detai/get_detai_pagesize?pagesize="+5+"&&pageindex="+0+"&&search=").subscribe(res=>{
+    this._api.get("api/detai/get_detai_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
       this.item = res;
     });
     this._api.get("api/linhvuc/get_linhvuc_all").subscribe(res=>{
@@ -53,144 +58,115 @@ export class TopicComponent extends BaseComponent implements OnInit {
     });
   })
   }
-  edit(id){
-    this.them = false;
-    this._api.get("api/detai/get_don_vi_by_id/"+id).subscribe(res=>{
-      this.itemsinger = res;
+  onpagination_(i){
+    var a = (this.item.total / this.pagesize).toFixed();
+    if(i<1){
+      this.pageindex = 1;
+    }
+    else{
+      if(i>a){
+        this.pageindex = a;
+      }
+      else{
+        this.pageindex = i;
+      }
+    }  
+    this._api.get("api/detai/get_detai_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
+      this.item = res;
     });
   }
-  create(){
-    this.them = true;
+  pagination(tong){
+    let a:number[]= [];
+    var total = (tong/this.pagesize).toFixed();
+    for(var i = 1; i <= parseInt(total); i++){
+      a.push(i);
+    }
+    return a;
+  }
+  chuuyen_ds_tt(tt){
+    this.chon_ = tt;
+    alert(this.chon_);
   }
   filepdf:any;
   changemc(event){
     this.filepdf = event.target;
   }
   loaddata(){
-    this._api.get("api/donvi/get_don_vi_all").subscribe(res=>{
+    this._api.get("api/detai/get_detai_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
       this.item = res;
       console.log(this.item);
     })
   }
-  exec(dv , sohieu, tap, so, trang, soif, lv, lnv, hdnckh, tgbd, tgkt , cbv){
-    this.getEncodeFromImage(this.filepdf).subscribe(res=>{
-      var Formdata = {
-        tendetai : dv,
-        sohieu:sohieu,
-        tap: tap,
-        so: so,
-        trang: trang,
-        soif : soif,
-        minhchung: res,
-        tinhtrang: 1,
-        ghichu: CKEDITOR.instances.content.getData(),
-        idlinhvuc: lv,
-        idloainv: lnv,
-        idhdnckh:hdnckh,
-        thoigianbd:tgbd,
-        thoigiannnt: tgkt,
-        capbv: cbv
-      }
-      console.log(Formdata);
-      // if(this.them){
-      //   this._api.post("api/donvi/create_don_vi",Formdata).subscribe(res=>{
-      //     if(res){           
-      //       Swal.fire({
-      //         position: 'top-end',
-      //         icon: 'success',
-      //         title: 'Thêm thành công',
-      //         showConfirmButton: false,
-      //         timer: 1500
-      //       });         
-      //       this.loaddata();
-      //       $("#exampleModal").modal('hide');
-      //     }
-      //     else{
-      //       Swal.fire({
-      //         position: 'top-end',
-      //         icon: 'error',
-      //         title: 'Thêm thất bại',
-      //         showConfirmButton: false,
-      //         timer: 1500
-      //       })
-      //     }
-      //   });
-      // }
-      // else{
-      //   this._api.put("api/donvi/edit_don_vi/"+this.itemsinger.madonvi,Formdata).subscribe(res=>{
-      //     if(res){           
-      //       Swal.fire({
-      //         position: 'top-end',
-      //         icon: 'success',
-      //         title: 'Sửa thành công',
-      //         showConfirmButton: false,
-      //         timer: 1500
-      //       });
-      //       this.loaddata();
-      //       $("#closeModel").click();
-      //     }
-      //     else{
-      //       Swal.fire({
-      //         position: 'top-end',
-      //         icon: 'error',
-      //         title: 'Sửa thất bại',
-      //         showConfirmButton: false,
-      //         timer: 1500
-      //       })
-      //     }
-      //   });
-      // }
-    });
-  }
-  delete_(id){
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: 'btn btn-success',
-        cancelButton: 'btn btn-danger'
-      },
-      buttonsStyling: false
-    })
-    
-    swalWithBootstrapButtons.fire({
-      title: 'Bạn có chắc không?',
-      text: "Bạn sẽ không thể hoàn nguyên điều này!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Có, xóa nó!',
-      cancelButtonText: 'Không, hủy bỏ!',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this._api.delete("api/donvi/delete_don_vi/"+id).subscribe(res=>{
-          if(res){           
-            swalWithBootstrapButtons.fire(
-              'Đã xóa!',
-              'Tệp của bạn đã bị xóa.',
-              'success'
-            );
-            this.loaddata();
-          }
-          else{
-            swalWithBootstrapButtons.fire(
-              'Thất bại!',
-              'Tệp của bạn chưa xóa.',
-              'error'
-            );
-          }
-        });
-        
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire(
-          'Đã hủy',
-          'Tệp của bạn an toàn :)',
-          'error'
-        );
-      }
-    })
-  }
+  // exec(dv , sohieu, tap, so, trang, soif, lv, lnv, hdnckh, tgbd, tgkt , cbv){
+  //   this.getEncodeFromImage(this.filepdf).subscribe(res=>{
+  //     var Formdata = {
+  //       tendetai : dv,
+  //       sohieu:sohieu,
+  //       tap: tap,
+  //       so: so,
+  //       trang: trang,
+  //       soif : soif,
+  //       minhchung: res,
+  //       tinhtrang: 1,
+  //       ghichu: CKEDITOR.instances.content.getData(),
+  //       idlinhvuc: lv,
+  //       idloainv: lnv,
+  //       idhdnckh:hdnckh,
+  //       thoigianbd:tgbd,
+  //       thoigiannnt: tgkt,
+  //       capbv: cbv
+  //     }
+  //     console.log(Formdata);
+  //     // if(this.them){
+  //     //   this._api.post("api/donvi/create_don_vi",Formdata).subscribe(res=>{
+  //     //     if(res){           
+  //     //       Swal.fire({
+  //     //         position: 'top-end',
+  //     //         icon: 'success',
+  //     //         title: 'Thêm thành công',
+  //     //         showConfirmButton: false,
+  //     //         timer: 1500
+  //     //       });         
+  //     //       this.loaddata();
+  //     //       $("#exampleModal").modal('hide');
+  //     //     }
+  //     //     else{
+  //     //       Swal.fire({
+  //     //         position: 'top-end',
+  //     //         icon: 'error',
+  //     //         title: 'Thêm thất bại',
+  //     //         showConfirmButton: false,
+  //     //         timer: 1500
+  //     //       })
+  //     //     }
+  //     //   });
+  //     // }
+  //     // else{
+  //     //   this._api.put("api/donvi/edit_don_vi/"+this.itemsinger.madonvi,Formdata).subscribe(res=>{
+  //     //     if(res){           
+  //     //       Swal.fire({
+  //     //         position: 'top-end',
+  //     //         icon: 'success',
+  //     //         title: 'Sửa thành công',
+  //     //         showConfirmButton: false,
+  //     //         timer: 1500
+  //     //       });
+  //     //       this.loaddata();
+  //     //       $("#closeModel").click();
+  //     //     }
+  //     //     else{
+  //     //       Swal.fire({
+  //     //         position: 'top-end',
+  //     //         icon: 'error',
+  //     //         title: 'Sửa thất bại',
+  //     //         showConfirmButton: false,
+  //     //         timer: 1500
+  //     //       })
+  //     //     }
+  //     //   });
+  //     // }
+  //   });
+  // }
   splittenhdnckh(tenhdnckh){
     var a =  tenhdnckh.split(' ');
     var b = "";
@@ -208,5 +184,54 @@ export class TopicComponent extends BaseComponent implements OnInit {
       case 3:
         return "Đề tài cấp nhà nước";
     }
+  }
+  chuyenduyet_(id,tt){
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+    
+    swalWithBootstrapButtons.fire({
+      title: 'Bạn có chắc không?',
+      text: "Bạn sẽ không thể hoàn nguyên điều này!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Có',
+      cancelButtonText: 'Không, hủy bỏ!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._api.delete(`api/detai/chuyen_trang_thai?id=${id}&trangthai=${tt}&time=`).subscribe(res=>{
+          if(res){           
+            swalWithBootstrapButtons.fire(
+              'Chuyển thành công',
+              'Đề tài đã chuyển sang đã duyệt',
+              'success'
+            );
+            this.loaddata();
+          }
+          else{
+            swalWithBootstrapButtons.fire(
+              'Chuyển thất bại',
+              'Đề tài chưa chuyển sang đã duyệt',
+              'error'
+            );
+          }
+        });
+        
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Đã hủy',
+          'Đề tài chưa chuyển sang đã duyệt :)',
+          'error'
+        );
+      }
+    })
   }
 }

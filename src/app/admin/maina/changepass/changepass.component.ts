@@ -171,4 +171,37 @@ export class ChangepassComponent extends BaseComponent implements OnInit {
     }
     
   }
+  on_display_pass(stt){
+    alert(stt);
+    if(stt==1){
+      if($("#mkm_eye i").attr("class")=="fa fa-eye-slash"){
+        $("#exampleInputmkm").attr("type","password");
+        $("#mkm_eye").html('<i class="fa fa-eye" style="position: absolute; top: 10px; right: 10px; font-size: 20px;" aria-hidden="true"></i>');
+      }
+      else{
+        $("#exampleInputmkm").attr("type","text");
+        $("#mkm_eye").html('<i class="fa fa-eye-slash" style="position: absolute; top: 10px; right: 10px; font-size: 20px;" aria-hidden="true"></i>');
+      }
+    }
+    if(stt==2){
+      if($("#nlkm_eye i").attr("class")=="fa fa-eye-slash"){
+        $("#exampleInputnlmk").attr("type","password");
+      $("#nlkm_eye").html('<i class="fa fa-eye" style="position: absolute; top: 10px; right: 10px; font-size: 20px;" aria-hidden="true"></i>');
+      }
+      else{
+        $("#exampleInputnlmk").attr("type","text");
+        $("#nlkm_eye").html('<i class="fa fa-eye-slash" style="position: absolute; top: 10px; right: 10px; font-size: 20px;" aria-hidden="true"></i>');
+      }   
+    }
+    if(stt==3){
+      if($("#mkc_eye i").attr("class")=="fa fa-eye-slash"){
+        $("#exampleInputmkc").attr("type","password");
+        $("#mkc_eye").html('<i class="fa fa-eye" style="position: absolute; top: 10px; right: 10px; font-size: 20px;" aria-hidden="true"></i>');
+      }
+      else{
+        $("#exampleInputmkc").attr("type","text");
+        $("#mkc_eye").html('<i class="fa fa-eye-slash" style="position: absolute; top: 10px; right: 10px; font-size: 20px;" aria-hidden="true"></i>');
+      }
+    }
+  }
 }

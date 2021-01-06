@@ -30,7 +30,10 @@ import { StaffComponent } from './staff/staff.component';
 import { EditbackgroupComponent } from './editbackgroup/editbackgroup.component';
 import { EdituserComponent } from './edituser/edituser.component';
 import { ErroraccesComponent } from './erroracces/erroracces.component';
+import { MytopicComponent } from './mytopic/mytopic.component';
 // import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { ReactiveFormsModule} from '@angular/forms';
+import { NgSelect2Module } from 'ng-select2';
 const mainaroutes:Routes = [
   {
     path: '',
@@ -79,7 +82,10 @@ const mainaroutes:Routes = [
       {
         path:'detai',
         component: TopicComponent,
-        canActivate: [RoleGuard]
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
       },
       {
         path:'chitietdetai/:id',
@@ -173,6 +179,10 @@ const mainaroutes:Routes = [
       {
         path: 'loitruycap',
         component: ErroraccesComponent
+      },
+      {
+        path: 'detaicuatui',
+        component: MytopicComponent
       }
     ],
     canActivate: [AuthGuard]
@@ -207,7 +217,8 @@ const mainaroutes:Routes = [
     StaffComponent, 
     EditbackgroupComponent,
     ErroraccesComponent,
-    EdituserComponent
+    EdituserComponent,
+    MytopicComponent
   ],
   imports: [
     CommonModule,
@@ -215,7 +226,9 @@ const mainaroutes:Routes = [
     ShareaModule,
     RouterModule,
     CKEditorModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    NgSelect2Module
   ]
 })
 export class MainaModule { }
