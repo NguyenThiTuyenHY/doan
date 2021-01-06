@@ -23,7 +23,6 @@ export class HeaderaComponent implements OnInit {
       confirmButtonText: 'Đúng, thoát nó!'
     }).then((result) => {
       if (result.isConfirmed) {
-        alert("thoát nhá");
         localStorage.removeItem('user');
         this._rou.navigate(['/admin/dangnhap']);
       }

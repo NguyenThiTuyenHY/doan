@@ -196,8 +196,12 @@
                         <input type="text" class="form-control" id="example4" [(ngModel)]="txt_ths">
                     </div>
                     <div class="form-group">
+                        <label for="example5">Chứng minh</label>
+                        <input type="file" accept="application/msword, application/pdf">
+                    </div>
+                    <div class="form-group">
                         <label for="example5">Ghi chú</label>
-                        <input type="text" class="form-control" id="example5" [(ngModel)]="gc_ths">
+                        <input type="text" class="form-control" id="example6" [(ngModel)]="gc_ths">
                     </div>
                 </ng-container>
             </div>
@@ -239,7 +243,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" (click)="edit_nhomtg_2(sel_ht.value)">Lưu</button>
+                <button type="button" class="btn btn-primary">Lưu</button>
             </div>
         </div>
     </div>

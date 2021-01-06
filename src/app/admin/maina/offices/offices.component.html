@@ -77,6 +77,10 @@
                                     <button class="btn btn-warning ml-2" *ngIf="us.idrole!=1" (click)="delete_us(us.id)">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </button>
+                                    <button class="btn ml-2" *ngIf="us.idrole!=1" [ngClass]="{'btn-success' : us.trangthai == 1, 'btn-danger': us.trangthai == 2}" (click)="change_status_us(us.id)">
+                                        <i class="fa fa-unlock" aria-hidden="true" *ngIf="us.trangthai==1"></i>
+                                        <i class="fa fa-lock" aria-hidden="true" *ngIf="us.trangthai==2"></i>
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>

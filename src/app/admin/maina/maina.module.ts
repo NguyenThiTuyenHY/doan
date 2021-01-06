@@ -158,12 +158,16 @@ const mainaroutes:Routes = [
         component: RoleComponent,
         canActivate: [RoleGuard],
         data: {
-          roles: [2]
+          roles: [1]
         }
       },
       {
         path: 'nhanvien',
-        component: StaffComponent
+        component: StaffComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [2]
+        }
       },
       {
         path: 'lylich/:id',
@@ -182,7 +186,11 @@ const mainaroutes:Routes = [
       },
       {
         path: 'detaicuatui',
-        component: MytopicComponent
+        component: MytopicComponent,
+        canActivate: [RoleGuard],
+        data: {
+          roles: [3]
+        }
       }
     ],
     canActivate: [AuthGuard]

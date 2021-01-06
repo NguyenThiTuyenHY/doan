@@ -23,6 +23,7 @@ export class OfficesComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this._api.get("api/user/get_user_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
       this.item = res;
+      console.log(this.item);
     });
     this._api.get("api/role/get_role_all").subscribe(res=>{
       this.itemrole = res;
@@ -36,6 +37,7 @@ export class OfficesComponent extends BaseComponent implements OnInit {
     this.ser = search;
   }
   search_(){
+    this.pageindex = 1;
     this._api.get("api/user/get_user_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
       this.item = res;
     });
@@ -138,6 +140,56 @@ export class OfficesComponent extends BaseComponent implements OnInit {
           }
         });
     });   
+  }
+  change_status_us(id){
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+    
+    swalWithBootstrapButtons.fire({
+      title: 'Bạn có chắc không?',
+      text: "Khoá người dùng không thực hiện được các chức năng, và ngược lại!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Có!',
+      cancelButtonText: 'Không, hủy bỏ!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._api.get("api/user/change_status/"+id).subscribe(res=>{
+          if(res.ketqua){
+            swalWithBootstrapButtons.fire(
+              'Chuyển đổi trạng thái thành công!',
+              res.thongbao,
+              'success'
+            );
+            this._api.get("api/user/get_user_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
+              this.item = res;
+            });
+          }
+          else{
+            swalWithBootstrapButtons.fire(
+              'Chuyển đổi trạng thái thất bại!',
+              res.thongbao,
+              'error'
+            );
+          }
+        }); 
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Đã hủy',
+          'Barn ghi của bạn an toàn :)',
+          'error'
+        );
+      }
+    })
   }
   delete_us(id){
     const swalWithBootstrapButtons = Swal.mixin({

@@ -12,7 +12,6 @@ import Swal from 'sweetalert2';
 })
 export class DetailstopicComponent extends BaseComponent implements OnInit {
   @ViewChild('closebutton') closebutton;
-  @ViewChild('close_nhomtg') close_nhomtg;
   gc_shtt:any;
   txt_ht:any;
   gc_ht:any;
@@ -156,24 +155,11 @@ export class DetailstopicComponent extends BaseComponent implements OnInit {
       if(res.ketqua){
         this._api.get("api/nhomtg/get_nhomtg_all/"+this.id).subscribe(res=>{
           this.itemnhomtg = res;
+          // console.log(this.itemnhomtg);
         });
-        Swal.fire({
-          position: 'top-end',
-          icon: 'success',
-          title: res.thongbao,
-          showConfirmButton: false,
-          timer: 1500
-        })
-        this.close_nhomtg.nativeElement.click();
       }
       else{
-        Swal.fire({
-          position: 'top-end',
-          icon: 'error',
-          title: res.thongbao,
-          showConfirmButton: false,
-          timer: 1500
-        })
+
       }
     })
   }
