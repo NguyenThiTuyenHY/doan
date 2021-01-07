@@ -30,7 +30,7 @@ export class NewsComponent extends BaseComponent implements OnInit {
    itemloai:any;
    pageindex: any = 1;
    pagesize: any = 5;
-   ser:any;
+   ser:any="";
    public editorConfig = {
     simpleUpload: {
       // The URL that the images are uploaded to.
@@ -79,13 +79,14 @@ export class NewsComponent extends BaseComponent implements OnInit {
   //   });
   // }
   search_(){
+    this.pageindex = 1;
     this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
       this.item = res;
       console.log(this.item);
     });
   }
   onpagination_(i){
-    var a = (this.item.total / this.pagesize).toFixed();
+    var a = Math.ceil(this.item.total / this.pagesize);
     if(i<1){
       this.pageindex = 1;
     }
@@ -97,7 +98,7 @@ export class NewsComponent extends BaseComponent implements OnInit {
         this.pageindex = i;
       }
     }  
-    this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search=").subscribe(res=>{
+    this._api.get("api/tintuc/get_tintuc_pagesize?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser).subscribe(res=>{
       this.item = res;
     });
   }
@@ -179,8 +180,8 @@ export class NewsComponent extends BaseComponent implements OnInit {
   }
   pagination(tong){
     let a:number[]= [];
-    var total = (tong/this.pagesize).toFixed();
-    for(var i = 1; i <= parseInt(total); i++){
+    var total = Math.ceil(tong/this.pagesize);
+    for(var i = 1; i <= total; i++){
       a.push(i);
     }
     return a;
