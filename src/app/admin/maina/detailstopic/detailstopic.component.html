@@ -16,7 +16,13 @@
                     <p>Tên đề tài: {{itemdetai.tendetai}}</p>
                     <p>Tập: {{itemdetai.tap}}</p>
                     <p>Trang: {{itemdetai.trang}}</p>
-                    <p>Tình trạng: {{itemdetai.tinhtrang}}</p>
+                    <p>Tình trạng:
+                        <span *ngIf="itemdetai.tinhtrang==1">Đang chờ xét duyệt</span>
+                        <span *ngIf="itemdetai.tinhtrang==2">Được duyệt</span>
+                        <span *ngIf="itemdetai.tinhtrang==3">Hoàn thành</span>
+                        <span *ngIf="itemdetai.tinhtrang==4">Xin thêm thời gian</span>
+                        <span *ngIf="itemdetai.tinhtrang==5">Áp dụng thức tế</span>
+                    </p>
                     <p>Minh chứng: {{itemdetai.minhchung}}</p>
                 </div>
                 <div class="col-sm-6">
@@ -103,8 +109,8 @@
                                 <td>{{tg.hoten}}</td>
                                 <td>{{tg.chucvu}}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#edithosoModal" (click)="edit_nhomtg(tg.id)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
-                                    <button type="button" class="btn btn-primary btn-sm" (click)="delete_nhomtg(tg.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                    <button *ngIf="tg.idnv!=user.idnv" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#edithosoModal" (click)="edit_nhomtg(tg.id)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
+                                    <button *ngIf="tg.idnv!=user.idnv" type="button" class="btn btn-primary btn-sm" (click)="delete_nhomtg(tg.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -141,7 +147,13 @@
                         <tr *ngFor="let hs of itemhoso; let i = index;">
                             <td>{{i+1}}</td>
                             <td>{{hs.ten}}</td>
-                            <td>{{hs.minhchung}}</td>
+                            <td>
+                                <span *ngIf="hs.minhchung.split('.')[1] == 'doc' ||hs.minhchung.split('.')[1] == 'docx'"><img src="https://img.icons8.com/fluent/48/000000/microsoft-word-2019.png"/></span>
+                                <span *ngIf="hs.minhchung.split('.')[1] == 'pdf'"><img src="https://img.icons8.com/doodle/48/000000/pdf-2.png"/></span>
+                                <a href="javascript:void(0)" (click)="download_file(hs.minhchung)">
+                                    &nbsp;{{hs.minhchung}}
+                                </a>
+                            </td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="edit_hoso(hs.id)"><i class="fa fa-wrench" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-primary btn-sm" (click)="delete_hoso(hs.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -197,7 +209,7 @@
                     </div>
                     <div class="form-group">
                         <label for="example5">Chứng minh</label>
-                        <input type="file" accept="application/msword, application/pdf">
+                        <input type="file" #file_data accept="application/msword, application/pdf" (change)="upload_img($event)">
                     </div>
                     <div class="form-group">
                         <label for="example5">Ghi chú</label>
@@ -222,17 +234,15 @@
           </button>
             </div>
             <div class="modal-body">
-                <!-- <ng-component *ngIf="nhomtg_singer.idnv != null">
-                        <div class="form-group">
-                            <label for="exampleSelectEditnv">Họ tên nhân viên</label>
-                            <select class="form-control" id="exampleSelectEditnv" #sel_ht>
-                            <ng-container *ngFor="let item of itemnhomtg">
-                                <option value="{{item.id}}" [selected]="item.id==nhomtg_singer.idnv" (change)="change_htnv(item.hoten)">{{item.hoten}}</option>
-                            </ng-container>
-                            </select>
-                        </div>
-                    </ng-component> -->
-                <div class="form-group">
+                <div class="form-group" [ngStyle]="{'display': id_nv_edit > 0 ? 'block' : 'none'}">
+                    <label for="exampleSelectEditnv">Chọn nhân viên</label>
+                    <select #sel class="form-control" id="exampleSelectEditnv" (change)="change_htnv(sel.value)">
+                        <ng-container *ngFor="let item of user_list">
+                            <option value="{{item.id}}" [selected]="item.id==nhomtg_singer.idnv">{{item.hoten}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="form-group" [ngStyle]="{'display': id_nv_edit > 0 ? 'none' : 'block'}">
                     <label for="txt_hoten">Họ tên</label>
                     <input type="text" class="form-control" id="txt_hoten" [(ngModel)]="ht_txt">
                 </div>
@@ -243,7 +253,37 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Lưu</button>
+                <button type="button" class="btn btn-primary" (click)="edit_nhomtg_2()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thông tin hồ sơ</h5>
+                <button type="button" #close_edit_hoso class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="example4">Tên hồ sơ</label>
+                    <input type="text" class="form-control" #txt_hs id="example4" value="singer_hoso.ten">
+                </div>
+                <div class="form-group">
+                    <label for="example5">Chứng minh</label>
+                    <input type="file" #file_data accept="application/msword, application/pdf" (change)="upload_img($event)">
+                </div>
+                <div class="form-group">
+                    <label for="example5">Ghi chú</label>
+                    <input type="text" class="form-control" id="example6">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="Save_hs(txt_hs.value)">Lưu</button>
             </div>
         </div>
     </div>

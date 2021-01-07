@@ -6,9 +6,10 @@
 
     <!-- DataTales Example -->
     <div class="row">
-        <button class="btn btn-primary _ds_tt" data-id=1 (click)="chuuyen_ds_tt(1)">Duyệt</button>
-        <button class="btn btn-default _ds_tt" data-id=2 (click)="chuuyen_ds_tt(2)">Chưa duyệt</button>
-        <button class="btn btn-primary _ds_tt" data-id=2 (click)="chuuyen_ds_tt(3)">Huỷ</button>
+        <button class="btn btn-primary _ds_tt" (click)="chuuyen_ds_all()">Tất cả</button>
+        <button class="btn btn-primary _ds_tt" (click)="chuuyen_ds_tt(1)">Duyệt</button>
+        <button class="btn btn-default _ds_tt" (click)="chuuyen_ds_tt(2)">Chưa duyệt</button>
+        <button class="btn btn-primary _ds_tt" (click)="chuuyen_ds_tt(3)">Huỷ</button>
     </div>
     <div class="card shadow mb-4">
         <div class="card-header py-3 row">
@@ -41,7 +42,7 @@
                     </tfoot>
                     <tbody>
                         <tr *ngFor="let dt of item.result">
-                            <ng-container *ngIf="(dt.tinhtrang == 1 && chon_ == 2) || (dt.tinhtrang != 1 && chon_ == 1)">
+                            <ng-container>
                                 <td>{{dt.tendetai}}</td>
                                 <td>{{dt.sohieu}}</td>
                                 <td>{{dt.tenlinhvuc}}</td>

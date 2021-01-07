@@ -12,6 +12,8 @@ import Swal from 'sweetalert2';
 })
 export class DetailstopicComponent extends BaseComponent implements OnInit {
   @ViewChild('closebutton') closebutton;
+  @ViewChild('close_nhomtg') close_nhomtg;
+  @ViewChild('close_edit_hoso') close_edit_hoso;
   gc_shtt:any;
   txt_ht:any;
   gc_ht:any;
@@ -34,7 +36,7 @@ export class DetailstopicComponent extends BaseComponent implements OnInit {
   public options: Options;
   constructor(private injector: Injector) {
     super(injector)
-   }
+  }
   ngOnInit(): void {
     this.options = {
       multiple: true,
@@ -134,32 +136,70 @@ export class DetailstopicComponent extends BaseComponent implements OnInit {
   }
   ht_txt:any;
   cv_txt:any;
+  id_nv_edit:any;
+  id_sel:any="";
+  select_true:any = false;
+  change_hoten: any ="";
   edit_nhomtg(id){
     this._api.get("api/nhomtg/get_nhomtg_id/"+id).subscribe(res=>{
       this.nhomtg_singer = res;
       this.ht_txt = this.nhomtg_singer.hoten;
       this.cv_txt = this.nhomtg_singer.chucvu;
+      this.id_nv_edit = this.nhomtg_singer.idnv;
+      if(this.id_nv_edit >0){
+        this.select_true = true;
+        this.change_hoten = this.nhomtg_singer.hoten;
+        this.id_sel = this.nhomtg_singer.idnv;
+      }
+      else{
+        this.select_true = false;
+      }
     });
   }
-  change_htnv(hoten){
-    this.ht_txt = hoten;
+  change_htnv(id){
+    this.id_sel = id;
+    this.change_hoten ="";
   }
-  edit_nhomtg_2(sel_ht){
-    var formmdata = {
-      iddetai: this.id,
-      hoten:this.ht_txt,
-      idnv: sel_ht,
+  edit_nhomtg_2(){
+    var sel_id;
+    var _hoten;
+    if(this.select_true){
+      sel_id = this.id_sel;
+      _hoten = this.change_hoten;
+    }
+    else{
+      sel_id = "";
+      _hoten = this.ht_txt;
+    }
+    var formdata = {
+      iddetai: parseInt(this.id),
+      hoten: _hoten,
+      idnv: parseInt(sel_id),
       chucvu: this.cv_txt
     }
-    this._api.get("api/nhomtg/edit_nhomtg/"+this.nhomtg_singer.id).subscribe(res=>{
+    console.log(formdata);
+    this._api.put("api/nhomtg/edit_nhomtg/"+this.nhomtg_singer.id,formdata).subscribe(res=>{
       if(res.ketqua){
         this._api.get("api/nhomtg/get_nhomtg_all/"+this.id).subscribe(res=>{
           this.itemnhomtg = res;
-          // console.log(this.itemnhomtg);
         });
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: res.thongbao,
+          showConfirmButton: false,
+          timer: 1500
+        })
+        this.close_nhomtg.nativeElement.click();
       }
       else{
-
+        Swal.fire({
+          position: 'top-end',
+          icon: 'error',
+          title: res.thongbao,
+          showConfirmButton: false,
+          timer: 1500
+        })
       }
     })
   }
@@ -214,11 +254,94 @@ export class DetailstopicComponent extends BaseComponent implements OnInit {
       }
     })
   }
+  singer_hoso:any;
   edit_hoso(id){
-
+    this._api.get("api/hoso/get_hoso_id/"+id).subscribe(res=>{
+      this.singer_hoso = res;
+    })
+  }
+  Save_hs(txt_hs){
+    this.ChangeFileToBase64(this.path_img).then(data=>{
+      var c = {
+        iddetai : parseInt(this.id),
+        ten: txt_hs,
+        minhchung: this.path_img.name +";" +data
+      }
+      this._api.put("api/hoso/edit_hoso/"+this.singer_hoso.id,c).subscribe(res=>{
+        if(res){
+          this.close_edit_hoso.nativeElement.click();
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: "Sửa hồ sơ thành công",
+            showConfirmButton: false,
+            timer: 1500
+          })
+          this._api.get("api/hoso/get_hoso_iddetai/"+this.id).subscribe(res=>{
+            this.itemhoso = res;
+          });
+        }
+        else{
+          Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: "Sửa hồ sơ thất bại",
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      })
+    })
   }
   delete_hoso(id){
-
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+    swalWithBootstrapButtons.fire({
+      title: 'Bạn có chắc không?',
+      text: "Bạn sẽ không thể hoàn nguyên điều này!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Có, xóa nó!',
+      cancelButtonText: 'Không, hủy bỏ!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._api.delete("api/hoso/delete_hoso/"+id).subscribe(res=>{
+          if(res){           
+            swalWithBootstrapButtons.fire(
+              'Đã xóa!',
+              'Tệp của bạn đã bị xóa.',
+              'success'
+            );
+            this._api.get("api/hoso/get_hoso_iddetai/"+this.id).subscribe(res=>{
+              this.itemhoso = res;
+            });
+          }
+          else{
+            swalWithBootstrapButtons.fire(
+              'Thất bại!',
+              'Tệp của bạn chưa xóa.',
+              'error'
+            );
+          }
+        });
+        
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Đã hủy',
+          'Tệp của bạn an toàn :)',
+          'error'
+        );
+      }
+    })
   }
   goi_sohuutritue(){
     this._api.get("api/sohuu/get_sohuu_all").subscribe(res=>{
@@ -250,6 +373,10 @@ export class DetailstopicComponent extends BaseComponent implements OnInit {
         
       }
     })
+  }
+  path_img:any;
+  upload_img(event){
+    this.path_img = event.target.files[0];
   }
   ng_Submit(){
     if(this.them==1){
@@ -331,10 +458,46 @@ export class DetailstopicComponent extends BaseComponent implements OnInit {
       })
     }
     if(this.them==3){
-      var c = {
-
-      }
+      this.ChangeFileToBase64(this.path_img).then(res=>{
+        var c = {
+          iddetai : parseInt(this.id),
+          ten: this.txt_ths,
+          minhchung: this.path_img.name +";" +res
+        }
+        console.log(c);
+        this._api.post("api/hoso/create_hoso",c).subscribe(res=>{
+          if(res){
+            this._api.get("api/hoso/get_hoso_iddetai/"+this.id).subscribe(res=>{
+              this.itemhoso = res;
+              // console.log(this.itemhoso);
+            });
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'Thêm hồ sơ thành công',
+              showConfirmButton: false,
+              timer: 1500
+            })
+            this.closebutton.nativeElement.click();
+          }
+          else{
+            Swal.fire({
+              position: 'top-end',
+              icon: 'error',
+              title: 'Thêm hồ sơ thất bại',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        })
+      })
     }
+  }
+  download_file(hs){
+    $.fileDownload("../../../../assets/file/"+hs, {
+      preparingMessageHtml: "Chúng tôi đang chuẩn bị báo cáo của bạn, vui lòng đợi ...",
+      failMessageHtml: "Đã xảy ra sự cố khi tạo báo cáo của bạn, vui lòng thử lại."
+    });
   }
   resultkqbv(kqbv){
     var kq="";

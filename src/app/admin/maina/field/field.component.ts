@@ -108,7 +108,7 @@ export class FieldComponent extends BaseComponent implements OnInit {
       });
     }
     else{
-      this._api.put("api/linhvuc/edit_linhvuc/"+this.itemsinger.madonvi,Formdata).subscribe(res=>{
+      this._api.put("api/linhvuc/edit_linhvuc/"+this.itemsinger.id,Formdata).subscribe(res=>{
         if(res){           
           Swal.fire({
             position: 'top-end',

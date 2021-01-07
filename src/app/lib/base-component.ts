@@ -47,4 +47,13 @@ export class BaseComponent {
           return observableOf(null);
         }
       }
+      public ChangeFileToBase64(update_file){
+        return new Promise(function(resolve) {
+          var reader = new FileReader();
+          reader.onloadend = function() {
+            resolve(reader.result)
+          }
+          reader.readAsDataURL(update_file);
+        })
+      }
 }

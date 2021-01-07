@@ -59,7 +59,7 @@ export class TopicComponent extends BaseComponent implements OnInit {
   })
   }
   onpagination_(i){
-    var a = (this.item.total / this.pagesize).toFixed();
+    var a = Math.ceil(this.item.total / this.pagesize);
     if(i<1){
       this.pageindex = 1;
     }
@@ -77,15 +77,17 @@ export class TopicComponent extends BaseComponent implements OnInit {
   }
   pagination(tong){
     let a:number[]= [];
-    var total = (tong/this.pagesize).toFixed();
-    for(var i = 1; i <= parseInt(total); i++){
+    var total = Math.ceil(tong/this.pagesize);
+    for(var i = 1; i <= total; i++){
       a.push(i);
     }
     return a;
   }
   chuuyen_ds_tt(tt){
-    this.chon_ = tt;
-    alert(this.chon_);
+    this._api.get("api/detai/get_detai_pagesize_tinhtrang?pagesize="+this.pagesize+"&&pageindex="+this.pageindex+"&&search="+this.ser+"&&tinhtrang="+tt).subscribe(res=>{
+      this.item = res;
+      console.log(this.item);
+    })
   }
   filepdf:any;
   changemc(event){
@@ -97,76 +99,10 @@ export class TopicComponent extends BaseComponent implements OnInit {
       console.log(this.item);
     })
   }
-  // exec(dv , sohieu, tap, so, trang, soif, lv, lnv, hdnckh, tgbd, tgkt , cbv){
-  //   this.getEncodeFromImage(this.filepdf).subscribe(res=>{
-  //     var Formdata = {
-  //       tendetai : dv,
-  //       sohieu:sohieu,
-  //       tap: tap,
-  //       so: so,
-  //       trang: trang,
-  //       soif : soif,
-  //       minhchung: res,
-  //       tinhtrang: 1,
-  //       ghichu: CKEDITOR.instances.content.getData(),
-  //       idlinhvuc: lv,
-  //       idloainv: lnv,
-  //       idhdnckh:hdnckh,
-  //       thoigianbd:tgbd,
-  //       thoigiannnt: tgkt,
-  //       capbv: cbv
-  //     }
-  //     console.log(Formdata);
-  //     // if(this.them){
-  //     //   this._api.post("api/donvi/create_don_vi",Formdata).subscribe(res=>{
-  //     //     if(res){           
-  //     //       Swal.fire({
-  //     //         position: 'top-end',
-  //     //         icon: 'success',
-  //     //         title: 'Thêm thành công',
-  //     //         showConfirmButton: false,
-  //     //         timer: 1500
-  //     //       });         
-  //     //       this.loaddata();
-  //     //       $("#exampleModal").modal('hide');
-  //     //     }
-  //     //     else{
-  //     //       Swal.fire({
-  //     //         position: 'top-end',
-  //     //         icon: 'error',
-  //     //         title: 'Thêm thất bại',
-  //     //         showConfirmButton: false,
-  //     //         timer: 1500
-  //     //       })
-  //     //     }
-  //     //   });
-  //     // }
-  //     // else{
-  //     //   this._api.put("api/donvi/edit_don_vi/"+this.itemsinger.madonvi,Formdata).subscribe(res=>{
-  //     //     if(res){           
-  //     //       Swal.fire({
-  //     //         position: 'top-end',
-  //     //         icon: 'success',
-  //     //         title: 'Sửa thành công',
-  //     //         showConfirmButton: false,
-  //     //         timer: 1500
-  //     //       });
-  //     //       this.loaddata();
-  //     //       $("#closeModel").click();
-  //     //     }
-  //     //     else{
-  //     //       Swal.fire({
-  //     //         position: 'top-end',
-  //     //         icon: 'error',
-  //     //         title: 'Sửa thất bại',
-  //     //         showConfirmButton: false,
-  //     //         timer: 1500
-  //     //       })
-  //     //     }
-  //     //   });
-  //     // }
-  //   });
-  // }
+  chuuyen_ds_all(){
+    this.pageindex = 1;
+    this.loaddata();
+  }
   splittenhdnckh(tenhdnckh){
     var a =  tenhdnckh.split(' ');
     var b = "";
